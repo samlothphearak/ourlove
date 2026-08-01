@@ -4,6 +4,14 @@ import { useState, useEffect } from "react";
 import { Heart, Mail, Sparkles, X, Plus, Loader2 } from "lucide-react";
 import { getLoveNotes, createLoveNote } from "@/app/actions/loveNotes";
 
+interface LoveNotePayload {
+  id: number;
+  title: string;
+  content: string;
+  reason?: string | null;
+  createdAt: Date | string;
+}
+
 export interface LoveNote {
   id: number | string;
   title: string;
@@ -34,13 +42,15 @@ export default function LoveNotes() {
     const res = await getLoveNotes();
 
     if (res.success && res.data) {
-      const formattedNotes: LoveNote[] = res.data.map((note) => ({
-        id: note.id,
-        title: note.title,
-        content: note.content,
-        reason: note.reason,
-        createdAt: new Date(note.createdAt).toISOString(),
-      }));
+      const formattedNotes: LoveNote[] = (res.data as LoveNotePayload[]).map(
+        (note: LoveNotePayload) => ({
+          id: note.id,
+          title: note.title,
+          content: note.content,
+          reason: note.reason,
+          createdAt: new Date(note.createdAt).toISOString(),
+        }),
+      );
       setNotes(formattedNotes);
     }
     setFetchingNotes(false);
