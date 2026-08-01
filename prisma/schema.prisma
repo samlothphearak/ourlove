@@ -1,0 +1,89 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model LoveNote {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("love_notes")
+}
+
+model PhotoMemory {
+  id             Int      @id @default(autoincrement())
+  title          String
+  date           String?
+  location       String?
+  imageUrl       String   @map("image_url") @db.Text
+  caption        String?
+  extendedMemory String?  @map("extended_memory") @db.Text
+  deviceName     String?  @map("device_name")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+
+  @@index([createdAt])
+  @@map("photo_memories")
+}
+
+model Streak {
+  id            String   @id @default(uuid())
+  currentStreak Int      @default(0)
+  lastCheckIn   DateTime?
+  petExp        Int      @default(0) // Experience points to level up the pet
+  petLevel      Int      @default(1)
+  updatedAt     DateTime @updatedAt
+}
+
+model Goal {
+  id        String   @id @default(uuid())
+  text      String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model VirtualLoveMeter {
+  id         String   @id @default(uuid())
+  hugCount   Int      @default(0)
+  kissCount  Int      @default(0)
+  updatedAt  DateTime @updatedAt
+
+  @@map("virtual_love_meter")
+}
+
+model OpenWhenLetter {
+  id         Int      @id @default(autoincrement())
+  title      String
+  tag        String
+  content    String   @db.Text
+  bgGradient String   @default("from-rose-400 to-pink-500") @map("bg_gradient")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("open_when_letters")
+}

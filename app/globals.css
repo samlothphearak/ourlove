@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+
+
+/* Floating ambient glowing hearts animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-25px) rotate(10deg) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+    opacity: 0.4;
+  }
+}
+
+.animate-float-slow {
+  animation: float 7s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 9s ease-in-out 2s infinite;
+}
+
+.animate-float-fast {
+  animation: float 5s ease-in-out 1s infinite;
+}
