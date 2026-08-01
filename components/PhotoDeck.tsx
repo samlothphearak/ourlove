@@ -38,6 +38,19 @@ interface PhotoCard {
   isFavorite?: boolean;
 }
 
+interface PhotoMemoryPayload {
+  id: number;
+  title: string;
+  date: string | null;
+  location: string | null;
+  imageUrl: string;
+  caption: string | null;
+  extendedMemory: string | null;
+  deviceName?: string | null;
+  createdAt: Date | string;
+  updatedAt?: Date | string | null;
+}
+
 // Helper function to detect client device name automatically
 function getDeviceName(): string {
   if (typeof window === "undefined" || !navigator) return "Web App";
@@ -92,14 +105,16 @@ export default function PhotoDeck() {
     setIsLoading(true);
     const res = await getPhotoMemories();
     if (res.success && res.data) {
-      const normalized = res.data.map((memory) => ({
-        ...memory,
-        date: memory.date ?? "",
-        location: memory.location ?? "",
-        caption: memory.caption ?? "",
-        extendedMemory: memory.extendedMemory ?? "",
-        deviceName: memory.deviceName ?? undefined,
-      }));
+      const normalized = (res.data as PhotoMemoryPayload[]).map(
+        (memory: PhotoMemoryPayload) => ({
+          ...memory,
+          date: memory.date ?? "",
+          location: memory.location ?? "",
+          caption: memory.caption ?? "",
+          extendedMemory: memory.extendedMemory ?? "",
+          deviceName: memory.deviceName ?? undefined,
+        }),
+      );
 
       setInitialPhotos(normalized);
       setCards(normalized);
